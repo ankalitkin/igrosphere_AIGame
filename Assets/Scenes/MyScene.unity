@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 254502548}
   - component: {fileID: 254502547}
   m_Layer: 0
-  m_Name: Ground
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1234,6 +1234,7 @@ MonoBehaviour:
   pointer: {fileID: 1655912928}
   lookAt: {fileID: 18410709}
   spawner: {fileID: 605635719}
+  floor: {fileID: 254502546}
   selfDrivenBulletPrefab: {fileID: 890539905786748591, guid: 742a5befae432874b83cda4e345ed1eb,
     type: 3}
   pointerController: {fileID: 1422068396}

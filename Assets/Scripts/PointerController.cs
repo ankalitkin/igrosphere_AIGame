@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 public class PointerController : MonoBehaviour
@@ -23,10 +21,11 @@ public class PointerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            bool isStatic = hit.transform.gameObject.isStatic;
-            if (isStatic)
+            bool isFloor = hit.transform.gameObject == GameManager.Instance.Floor;
+            if (isFloor)
                 _lookAt.position = hit.point;
-            if (Input.GetMouseButton(0) && isStatic || Input.GetMouseButtonDown(0) && hit.transform.gameObject == _oldTarget)
+            if (Input.GetMouseButton(0) && isFloor ||
+                Input.GetMouseButtonDown(0) && hit.transform.gameObject == _oldTarget)
                 _pointer.position = _lookAt.position;
         }
 

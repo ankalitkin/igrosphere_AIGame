@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Design.Serialization;
+﻿using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -36,5 +33,12 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void GameOver()
+    {
+        gameOverScreen.SetActive(true);
+        gameOverScreen.GetComponent<Image>().DOFade(0, 1).From();
+        gameOverScreen.transform.GetChild(0).GetComponent<Text>().DOFade(0, 1).From();
     }
 }

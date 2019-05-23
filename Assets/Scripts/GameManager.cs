@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(PlayerHealthSystem))]
 public class GameManager : MonoBehaviour
@@ -12,6 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject pointer;
     [SerializeField] private GameObject lookAt;
     [SerializeField] private GameObject spawner;
+    [SerializeField] private GameObject floor;
     [SerializeField] private GameObject selfDrivenBulletPrefab;
     [SerializeField] private PointerController pointerController;
     [SerializeField] private Transform characters;
@@ -24,9 +21,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     [HideInInspector] public GameObject target;
     private bool _gameActive = true;
-    private int score;
-
-    private int n => characters.childCount;
+    private int _score;
 
     [SerializeField, HideInInspector] private PlayerHealthSystem _healthSystem;
     public PlayerHealthSystem HealthSystem => _healthSystem;
@@ -47,11 +42,11 @@ public class GameManager : MonoBehaviour
 
     public float BulletSpeed => bulletSpeed;
 
-    public PointerController PointerController => pointerController;
-
     public GameObject SelfDrivenBulletPrefab => selfDrivenBulletPrefab;
 
-    public int Score => score;
+    public GameObject Floor => floor;
+
+    public int Score => _score;
 
     private void OnEnable()
     {
@@ -63,7 +58,7 @@ public class GameManager : MonoBehaviour
     {
         if (i == 0)
             return pointer.transform.position;
-        float angle = n > 2 ? -Mathf.PI * (i - 1) / (n - 2) : -Mathf.PI / 2;
+        float angle = characters.childCount > 2 ? -Mathf.PI * (i - 1) / (characters.childCount - 2) : -Mathf.PI / 2;
         Vector3 shift = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
         shift = pointer.transform.localToWorldMatrix * shift;
         return shift * radius + pointer.transform.position;
@@ -71,7 +66,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (_gameActive && n == 0)
+        if (_gameActive && characters.childCount == 0)
             GameOver();
         if (!_gameActive && Input.anyKey)
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -82,15 +77,13 @@ public class GameManager : MonoBehaviour
         if (!_gameActive)
             return;
         spawner.SetActive(false);
-        UIManager.Instance.GameOverScreen.SetActive(true);
-        UIManager.Instance.GameOverScreen.GetComponent<Image>().DOFade(0, 1).From();
-        UIManager.Instance.GameOverScreen.transform.GetChild(0).GetComponent<Text>().DOFade(0, 1).From();
+        UIManager.Instance.GameOver();
         _gameActive = false;
     }
 
     public void IncrementScore()
     {
-        score++;
+        _score++;
         UIManager.Instance.UpdateScore();
     }
 }

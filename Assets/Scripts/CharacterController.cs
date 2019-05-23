@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using UnityStandardAssets.Characters.ThirdPerson;
 using Quaternion = UnityEngine.Quaternion;
@@ -11,7 +7,6 @@ using Vector3 = UnityEngine.Vector3;
 public class CharacterController : MonoBehaviour
 {
     private const float Eps = 0.01f;
-    [SerializeField, HideInInspector] private Rigidbody _rigidbody;
     [SerializeField, HideInInspector] private NavMeshAgent _agent;
     [SerializeField, HideInInspector] private ThirdPersonCharacter _character;
     private Vector3 _oldPos;
@@ -19,7 +14,6 @@ public class CharacterController : MonoBehaviour
 
     private void OnValidate()
     {
-        _rigidbody = GetComponent<Rigidbody>();
         _agent = GetComponent<NavMeshAgent>();
         _character = GetComponent<ThirdPersonCharacter>();
     }
@@ -31,7 +25,9 @@ public class CharacterController : MonoBehaviour
                       && (GameManager.Instance.target.transform.position - transform.position).magnitude <
                       GameManager.Instance.AttackDistance)
         {
-            FireballBullet bullet = Instantiate(GameManager.Instance.SelfDrivenBulletPrefab, transform.position,
+            Vector3 bulletPos = transform.position;
+            bulletPos.y += 1;
+            FireballBullet bullet = Instantiate(GameManager.Instance.SelfDrivenBulletPrefab, bulletPos,
                 Quaternion.identity).GetComponent<FireballBullet>();
             bullet.goTo = GameManager.Instance.target;
             _time = GameManager.Instance.AttackDelay;
