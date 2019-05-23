@@ -601,7 +601,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4074431338740616446}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8.91, y: 6.2078514, z: 4.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -663,7 +663,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &4074431338740616445
 CapsuleCollider:
@@ -676,7 +676,7 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 1.92
+  m_Height: 1.6
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!195 &4074431338740616440
@@ -690,7 +690,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 8
-  m_Acceleration: 8
+  m_Acceleration: 20
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0.2
@@ -713,9 +713,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 589996b54d304eb4c979ca877a6d6f40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rigidbody: {fileID: 4074431338740616443}
   _agent: {fileID: 4074431338740616440}
   _character: {fileID: 4074431338740616442}
+  _renderer: {fileID: 4074431338743726588}
+  _animator: {fileID: 4074431338748051260}
 --- !u!1 &4074431338740616516
 GameObject:
   m_ObjectHideFlags: 0

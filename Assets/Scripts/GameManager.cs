@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(PlayerHealthSystem))]
@@ -12,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject selfDrivenBulletPrefab;
     [SerializeField] private PointerController pointerController;
     [SerializeField] private Transform characters;
+    [SerializeField] private float rotationSpeed = 6;
     [SerializeField] private float radius = 1;
     [SerializeField] private float mobSpeed = 2;
     [SerializeField] private float attackDelay = .5f;
@@ -19,9 +22,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float damage = .2f;
     [SerializeField] private float attackDistance = 5f;
     public static GameManager Instance;
-    [HideInInspector] public GameObject target;
     private bool _gameActive = true;
     private int _score;
+    private List<GameObject> _enemies;
+
 
     [SerializeField, HideInInspector] private PlayerHealthSystem _healthSystem;
     public PlayerHealthSystem HealthSystem => _healthSystem;
@@ -31,6 +35,8 @@ public class GameManager : MonoBehaviour
     public Camera Camera => camera;
 
     public GameObject LookAt => lookAt;
+
+    public float RotationSpeed => rotationSpeed;
 
     public float MobSpeed => mobSpeed;
 
@@ -51,6 +57,7 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         Instance = this;
+        _enemies = new List<GameObject>();
         _healthSystem = GetComponent<PlayerHealthSystem>();
     }
 
@@ -72,13 +79,46 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void AddEnemy(GameObject enemy)
+    {
+        _enemies.Add(enemy);
+    }
+
+    public void RemoveEnemy(GameObject enemy)
+    {
+        _enemies.Remove(enemy);
+    }
+
+    public GameObject GetClosestEnemy(Vector3 position)
+    {
+        GameObject closest = null;
+        float lastDist = -1;
+        foreach (var obj in _enemies)
+        {
+            float dist = (obj.transform.position - position).sqrMagnitude;
+            if (lastDist < 0 || dist < lastDist)
+            {
+                lastDist = dist;
+                closest = obj;
+            }
+        }
+
+        return closest;
+    }
+    
     public void GameOver()
     {
         if (!_gameActive)
             return;
+        _gameActive = false;
+        StartCoroutine(_GameOver());
+    }
+
+    private IEnumerator _GameOver()
+    {
+        yield return new WaitForSeconds(2);
         spawner.SetActive(false);
         UIManager.Instance.GameOver();
-        _gameActive = false;
     }
 
     public void IncrementScore()

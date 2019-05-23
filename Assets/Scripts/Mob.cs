@@ -1,41 +1,22 @@
 ﻿using UnityEngine;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 public class Mob : MonoBehaviour
 {
-    [SerializeField] Color defaultColor = Color.white;
-    [SerializeField] Color targetColor = Color.yellow;
-    private Renderer _renderer;
-
-    private void Awake()
-    {
-        _renderer = GetComponent<Renderer>();
-    }
-
     private void FixedUpdate()
     {
         transform.position += transform.forward * Time.fixedDeltaTime * GameManager.Instance.MobSpeed;
     }
 
-    private void Update()
-    {
-        if (gameObject == GameManager.Instance.target)
-            _renderer.material.color = targetColor;
-        else
-            _renderer.material.color = defaultColor;
-    }
-
-    private void OnMouseDown()
-    {
-        GameManager.Instance.target = gameObject;
-    }
-
     private void OnTriggerEnter(Collider other)
     {
-        GameObject.Destroy(other.gameObject);
+        //GameObject.Destroy(other.gameObject);
+        other.GetComponent<CharacterController>().Kill();
     }
 
     public static void Destroy(GameObject gameObject)
     {
+        GameManager.Instance.RemoveEnemy(gameObject);
         GameObject.Destroy(gameObject.GetComponent<MobHealthSystem>().HpBar.gameObject);
         GameObject.Destroy(gameObject);
     }

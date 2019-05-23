@@ -4,7 +4,6 @@
 public class PointerController : MonoBehaviour
 {
     [SerializeField, HideInInspector] private Camera _camera;
-    private GameObject _oldTarget;
 
     private Transform _pointer => GameManager.Instance.Pointer.transform;
 
@@ -21,16 +20,13 @@ public class PointerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            bool isFloor = hit.transform.gameObject == GameManager.Instance.Floor;
-            if (isFloor)
-                _lookAt.position = hit.point;
-            if (Input.GetMouseButton(0) && isFloor ||
-                Input.GetMouseButtonDown(0) && hit.transform.gameObject == _oldTarget)
+            _lookAt.position = hit.point;
+            if (Input.GetMouseButton(0))
+            {
+                if (_pointer != _lookAt)
+                    _pointer.LookAt(_lookAt);
                 _pointer.position = _lookAt.position;
+            }
         }
-
-        if (_pointer != _lookAt)
-            _pointer.LookAt(_lookAt);
-        _oldTarget = GameManager.Instance.target;
     }
 }

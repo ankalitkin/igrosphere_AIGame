@@ -18,6 +18,7 @@ public class Spawner : MonoBehaviour
             Vector3 pos = hit.point;
             pos.y = 0;
             GameObject mob = Instantiate(mobPrefab, pos, Quaternion.identity);
+            GameManager.Instance.AddEnemy(mob);
             Vector3 lookAt = transform.position;
             lookAt.y = mob.transform.position.y;
             mob.transform.LookAt(lookAt);
