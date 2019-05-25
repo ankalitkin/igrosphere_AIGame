@@ -27,8 +27,8 @@ public class WallGenerator : MonoBehaviour
         float w4 = p4.z - p2.z + 1;
         Instantiate(wallPrefab, c1, Quaternion.LookRotation(c1-p1), transform).transform.localScale = new Vector3( 1, 1, w1);
         Instantiate(wallPrefab, c2, Quaternion.LookRotation(c2-p4), transform).transform.localScale = new Vector3( 1, 1, w2);
-        Instantiate(wallPrefab, c3, Quaternion.LookRotation(c3-p1), transform).transform.localScale = new Vector3( 1, 1, w3);
-        Instantiate(wallPrefab, c4, Quaternion.LookRotation(c4-p4), transform).transform.localScale = new Vector3( 1, 1, w4);
+        Instantiate(wallPrefab, c3, Quaternion.LookRotation(c3-p3), transform).transform.localScale = new Vector3( 1, 1, w3);
+        Instantiate(wallPrefab, c4, Quaternion.LookRotation(c4-p2), transform).transform.localScale = new Vector3( 1, 1, w4);
     }
 
     private Vector3 GetPos(float x, float y)

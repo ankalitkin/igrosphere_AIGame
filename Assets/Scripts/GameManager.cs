@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject lookAt;
     [SerializeField] private GameObject spawner;
     [SerializeField] private GameObject selfDrivenBulletPrefab;
-    [SerializeField] private PointerController pointerController;
     [SerializeField] private Transform characters;
     [SerializeField] private Transform deadCharacters;
     [SerializeField] private Transform mobContainer;
@@ -23,6 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float attackDistance = 5f;
     public static GameManager Instance;
     private bool _gameActive = true;
+    private bool _waitForClick = false;
     private int _score;
     private List<GameObject> _enemies;
 
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
     {
         if (_gameActive && characters.childCount == 0)
             GameOver();
-        if (!_gameActive && Input.anyKey)
+        if (_waitForClick && Input.GetMouseButton(0))
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -108,15 +108,15 @@ public class GameManager : MonoBehaviour
         if (!_gameActive)
             return;
         _gameActive = false;
+        spawner.SetActive(false);
+        DOTween.KillAll();
         StartCoroutine(_GameOver());
     }
 
     private IEnumerator _GameOver()
     {
         yield return new WaitForSeconds(1);
-        spawner.SetActive(false);
-        DOTween.KillAll();
-        StopAllCoroutines();
+        _waitForClick = true;
         UIManager.Instance.GameOver();
     }
 
