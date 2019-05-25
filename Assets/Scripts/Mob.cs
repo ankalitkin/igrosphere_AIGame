@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public class Mob : MonoBehaviour
@@ -6,7 +7,7 @@ public class Mob : MonoBehaviour
     [SerializeField] private int splitAngle = 60;
     private int _health;
     private int _state;
-    
+
     [Serializable]
     public class State
     {
@@ -24,9 +25,11 @@ public class Mob : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        other.GetComponent<CharacterController>().Kill();
+        CharacterController characterController = other.GetComponent<CharacterController>();
+        if (characterController != null)
+            characterController.Kill();
     }
-    
+
     private void UpdateState()
     {
         transform.localScale = Vector3.one * states[_state].scale;
@@ -37,21 +40,22 @@ public class Mob : MonoBehaviour
     {
         UpdateState();
     }
-    
+
     public void Hit()
     {
         _health--;
         if (_health == 0)
         {
             bool split = states[_state].split;
-            if (++_state< states.Length)
+            if (++_state < states.Length)
             {
                 UpdateState();
                 if (split)
                 {
-                    GameObject mob = Instantiate(gameObject, transform.position, transform.rotation, GameManager.Instance.MobContainer);
+                    GameObject mob = Instantiate(gameObject, transform.position, transform.rotation,
+                        GameManager.Instance.MobContainer);
                     GameManager.Instance.AddEnemy(mob);
-                    mob.GetComponent<Mob>()._state=_state;
+                    mob.GetComponent<Mob>()._state = _state;
                     transform.localEulerAngles += new Vector3(0, -splitAngle, 0);
                     mob.transform.localEulerAngles += new Vector3(0, splitAngle, 0);
                 }
