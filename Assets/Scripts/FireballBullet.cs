@@ -28,7 +28,7 @@ public class FireballBullet : MonoBehaviour
         {
             Destroy(gameObject);
             if (goTo != null)
-                goTo.GetComponent<MobHealthSystem>().Hit();
+                goTo.GetComponent<Mob>().Hit();
         }
     }
 }

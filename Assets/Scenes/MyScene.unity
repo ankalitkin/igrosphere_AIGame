@@ -745,7 +745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20e11d00b6326c1458638cda3120dc70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mobPrefab: {fileID: 6125661271197642262, guid: 7a5db630305646c49aafad8f6d285756,
+  mobPrefab: {fileID: 8079363641500519880, guid: 1bece4c16350a6349b129cb287729214,
     type: 3}
   delay: 4
   deltaAngleDeg: 30
@@ -1847,23 +1847,18 @@ PrefabInstance:
     - target: {fileID: 4074431338740781278, guid: 55ab19994fe1d994880e8d6810e2e76c,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4074431338740781278, guid: 55ab19994fe1d994880e8d6810e2e76c,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4074431338740781278, guid: 55ab19994fe1d994880e8d6810e2e76c,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4074431338743726588, guid: 55ab19994fe1d994880e8d6810e2e76c,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 98a59276dcf65404f8462a05196050b6, type: 2}
     - target: {fileID: 4074431338740616443, guid: 55ab19994fe1d994880e8d6810e2e76c,
         type: 3}
       propertyPath: m_IsKinematic
@@ -1884,6 +1879,11 @@ PrefabInstance:
       propertyPath: m_Acceleration
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 4074431338743726588, guid: 55ab19994fe1d994880e8d6810e2e76c,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 98a59276dcf65404f8462a05196050b6, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 55ab19994fe1d994880e8d6810e2e76c, type: 3}
 --- !u!1 &6572054969130967531
