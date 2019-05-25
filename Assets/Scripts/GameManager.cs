@@ -1,34 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(PlayerHealthSystem))]
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private Camera camera;
     [SerializeField] private GameObject pointer;
     [SerializeField] private GameObject lookAt;
     [SerializeField] private GameObject spawner;
-    [SerializeField] private GameObject floor;
     [SerializeField] private GameObject selfDrivenBulletPrefab;
     [SerializeField] private PointerController pointerController;
     [SerializeField] private Transform characters;
+    [SerializeField] private Transform deadCharacters;
+    [SerializeField] private Transform mobContainer;
     [SerializeField] private float rotationSpeed = 6;
     [SerializeField] private float radius = 1;
     [SerializeField] private float mobSpeed = 2;
     [SerializeField] private float attackDelay = .5f;
     [SerializeField] private float bulletSpeed = 5;
-    [SerializeField] private float damage = .2f;
     [SerializeField] private float attackDistance = 5f;
     public static GameManager Instance;
     private bool _gameActive = true;
     private int _score;
     private List<GameObject> _enemies;
-
-
-    [SerializeField, HideInInspector] private PlayerHealthSystem _healthSystem;
-    public PlayerHealthSystem HealthSystem => _healthSystem;
 
     public GameObject Pointer => pointer;
 
@@ -40,8 +36,6 @@ public class GameManager : MonoBehaviour
 
     public float MobSpeed => mobSpeed;
 
-    public float Damage => damage;
-
     public float AttackDistance => attackDistance;
 
     public float AttackDelay => attackDelay;
@@ -50,7 +44,11 @@ public class GameManager : MonoBehaviour
 
     public GameObject SelfDrivenBulletPrefab => selfDrivenBulletPrefab;
 
-    public GameObject Floor => floor;
+    public Transform Characters => characters;
+
+    public Transform DeadCharacters => deadCharacters;
+
+    public Transform MobContainer => mobContainer;
 
     public int Score => _score;
 
@@ -58,7 +56,6 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         _enemies = new List<GameObject>();
-        _healthSystem = GetComponent<PlayerHealthSystem>();
     }
 
     public Vector3 GetCharacterPosition(int i)
@@ -116,14 +113,16 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator _GameOver()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         spawner.SetActive(false);
+        DOTween.KillAll();
+        StopAllCoroutines();
         UIManager.Instance.GameOver();
     }
 
     public void IncrementScore()
     {
-        _score++;
+        _score += 5;
         UIManager.Instance.UpdateScore();
     }
 }

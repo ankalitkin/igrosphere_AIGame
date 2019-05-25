@@ -49,7 +49,7 @@ public class Mob : MonoBehaviour
                 UpdateState();
                 if (split)
                 {
-                    GameObject mob = Instantiate(gameObject, transform.position, transform.rotation);
+                    GameObject mob = Instantiate(gameObject, transform.position, transform.rotation, GameManager.Instance.MobContainer);
                     GameManager.Instance.AddEnemy(mob);
                     mob.GetComponent<Mob>()._state=_state;
                     transform.localEulerAngles += new Vector3(0, -splitAngle, 0);
@@ -59,6 +59,7 @@ public class Mob : MonoBehaviour
             else
             {
                 Destroy(gameObject);
+                GameManager.Instance.IncrementScore();
             }
         }
     }

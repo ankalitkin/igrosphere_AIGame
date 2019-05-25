@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
+using UnityEngine;
 using UnityEngine.AI;
 using UnityStandardAssets.Characters.ThirdPerson;
 
@@ -12,7 +15,7 @@ public class CharacterController : MonoBehaviour
     private Vector3 _oldPos;
     private Vector3 _lookAt;
     private float _time;
-    private bool _isDead = false;
+    private bool _isDead;
 
     private void OnValidate()
     {
@@ -69,12 +72,29 @@ public class CharacterController : MonoBehaviour
     {
         if(_isDead)
             return;
-        transform.parent = transform.parent.parent;
+        transform.parent = GameManager.Instance.DeadCharacters;
         _isDead = true;
-        Destroy(_character);
-        Destroy(_agent);
-        Material mat = _renderer.material;
-        mat.SetFloat("_Metallic", 1);
+        _character.enabled = false;
+        _agent.enabled = false;
+        _renderer.material.SetFloat("_Metallic", 1);
         _animator.SetBool("DeathTrigger", true);
+        StartCoroutine(Reborn());
+    }
+    
+    
+
+    public IEnumerator Reborn()
+    {
+        yield return new WaitForSeconds(5);
+        if(!_isDead)
+            yield break;
+        _animator.SetBool("DeathTrigger", false);
+        Material mat = _renderer.material;
+        DOTween.To(() => mat.GetFloat("_Metallic"), x => mat.SetFloat("_Metallic", x), 0, 0.5f);
+        yield return new WaitForSeconds(0.5f);
+        transform.parent = GameManager.Instance.Characters;
+        _isDead = false;
+        _character.enabled = true;
+        _agent.enabled = true;        
     }
 }

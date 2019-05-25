@@ -17,7 +17,7 @@ public class Spawner : MonoBehaviour
             Physics.Raycast(GameManager.Instance.Camera.ViewportPointToRay(new Vector3(x, y)), out var hit);
             Vector3 pos = hit.point;
             pos.y = 0;
-            GameObject mob = Instantiate(mobPrefab, pos, Quaternion.identity);
+            GameObject mob = Instantiate(mobPrefab, pos, Quaternion.identity, GameManager.Instance.MobContainer);
             GameManager.Instance.AddEnemy(mob);
             Vector3 lookAt = transform.position;
             lookAt.y = mob.transform.position.y;
