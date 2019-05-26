@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -19,7 +19,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float mobSpeed = 2;
     [SerializeField] private float attackDelay = .5f;
     [SerializeField] private float bulletSpeed = 5;
-    [SerializeField] private float attackDistance = 5f;
+    [SerializeField] private float autoAttackDistance = 5f;
+    [SerializeField] private float attackDistance = 15f;
     public static GameManager Instance;
     private bool _gameActive = true;
     private bool _waitForClick = false;
@@ -35,7 +36,9 @@ public class GameManager : MonoBehaviour
     public float RotationSpeed => rotationSpeed;
 
     public float MobSpeed => mobSpeed;
-
+    
+    public float AutoAttackDistance => autoAttackDistance;
+    
     public float AttackDistance => attackDistance;
 
     public float AttackDelay => attackDelay;
@@ -62,7 +65,7 @@ public class GameManager : MonoBehaviour
     {
         if (i == 0)
             return pointer.transform.position;
-        float angle = characters.childCount > 2 ? -Mathf.PI * (i - 1) / (characters.childCount - 2) : -Mathf.PI / 2;
+        float angle = characters.childCount > 2 ? -2 * Mathf.PI * i / (characters.childCount - 1) : -Mathf.PI / 2;
         Vector3 shift = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
         shift = pointer.transform.localToWorldMatrix * shift;
         return shift * radius + pointer.transform.position;
@@ -120,9 +123,9 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.GameOver();
     }
 
-    public void IncrementScore()
+    public void IncreaseScore(int num)
     {
-        _score += 5;
+        _score += num;
         UIManager.Instance.UpdateScore();
     }
 }

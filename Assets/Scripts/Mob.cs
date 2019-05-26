@@ -28,6 +28,10 @@ public class Mob : MonoBehaviour
         CharacterController characterController = other.GetComponent<CharacterController>();
         if (characterController != null)
             characterController.Kill();
+        else
+        {
+            Hit();
+        }
     }
 
     private void UpdateState()
@@ -46,6 +50,7 @@ public class Mob : MonoBehaviour
         _health--;
         if (_health == 0)
         {
+            GameManager.Instance.IncreaseScore(1);
             bool split = states[_state].split;
             if (++_state < states.Length)
             {
@@ -63,8 +68,9 @@ public class Mob : MonoBehaviour
             else
             {
                 Destroy(gameObject);
-                GameManager.Instance.IncrementScore();
             }
+
+            GameManager.Instance.IncreaseScore(5);
         }
     }
 

@@ -1,34 +1,58 @@
-﻿using UnityEngine;
+﻿﻿using UnityEngine;
 
 public class FireballBullet : MonoBehaviour
 {
-    [HideInInspector] public GameObject goTo;
+    [HideInInspector] public Vector3 goToVect;
+    [HideInInspector] public GameObject goToObj;
+    [SerializeField, HideInInspector] private Rigidbody _rigidbody;
     private float _duration;
     private Vector3 _oldPos;
     private Vector3 _oldGoToPos;
     private float _time;
+    private bool _auto;
+    
+    private void OnValidate()
+    {
+        _rigidbody = GetComponent<Rigidbody>();
+    }
 
     private void Start()
     {
-        _oldPos = transform.position;
-        _oldGoToPos = goTo.transform.position;
-        _duration = (transform.position - goTo.transform.position).magnitude / GameManager.Instance.BulletSpeed;
+        if (goToObj != null)
+        {
+            _auto = true;
+            _oldPos = transform.position;
+            _oldGoToPos = goToObj.transform.position;
+            _duration = (transform.position - goToObj.transform.position).magnitude / GameManager.Instance.BulletSpeed;
+        }
+        else
+        {
+            _auto = false;
+            transform.LookAt(goToVect);
+            _rigidbody.velocity = transform.forward * GameManager.Instance.BulletSpeed;
+            _time = GameManager.Instance.AttackDistance / GameManager.Instance.BulletSpeed;
+        }
     }
 
     void FixedUpdate()
     {
-        if (goTo != null)
-            _oldGoToPos = goTo.transform.position;
-        if (_time < _duration)
+        if (_auto)
         {
-            _time += Time.fixedDeltaTime;
-            transform.position = Vector3.Lerp(_oldPos, _oldGoToPos, _time / _duration);
+            if(goToObj != null)
+                _oldGoToPos = goToObj.transform.position;
+            if (_time < _duration)
+            {
+                _time += Time.fixedDeltaTime;
+                transform.position = Vector3.Lerp(_oldPos, _oldGoToPos, _time / _duration);
+            }
+            else
+                Destroy(gameObject);
         }
         else
         {
-            Destroy(gameObject);
-            if (goTo != null)
-                goTo.GetComponent<Mob>().Hit();
+            _time -= Time.deltaTime;
+            if(_time < 0)
+                Destroy(gameObject);
         }
     }
 }
