@@ -16,11 +16,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform mobContainer;
     [SerializeField] private float rotationSpeed = 6;
     [SerializeField] private float radius = 1;
-    [SerializeField] private float mobSpeed = 2;
-    [SerializeField] private float attackDelay = .5f;
-    [SerializeField] private float bulletSpeed = 5;
+    [SerializeField] private float autoAttackDelay = .1f;
+    [SerializeField] private float attackDelay = .05f;
+    [SerializeField] private float bulletSpeed = 20;
     [SerializeField] private float autoAttackDistance = 5f;
-    [SerializeField] private float attackDistance = 15f;
+    [SerializeField] private float attackDistance = 5f;
     public static GameManager Instance;
     private bool _gameActive = true;
     private bool _waitForClick = false;
@@ -34,12 +34,12 @@ public class GameManager : MonoBehaviour
     public GameObject LookAt => lookAt;
 
     public float RotationSpeed => rotationSpeed;
-
-    public float MobSpeed => mobSpeed;
     
     public float AutoAttackDistance => autoAttackDistance;
     
     public float AttackDistance => attackDistance;
+
+    public float AutoAttackDelay => autoAttackDelay;
 
     public float AttackDelay => attackDelay;
 
@@ -121,6 +121,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         _waitForClick = true;
         UIManager.Instance.GameOver();
+        yield return new WaitForSeconds(2);
+        mobContainer.gameObject.SetActive(false);
     }
 
     public void IncreaseScore(int num)

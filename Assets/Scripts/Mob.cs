@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Mob : MonoBehaviour
 {
+    [SerializeField] private int speed = 4;
     [SerializeField] private int splitAngle = 60;
     private int _health;
     private int _state;
@@ -20,7 +21,7 @@ public class Mob : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position += transform.forward * Time.fixedDeltaTime * GameManager.Instance.MobSpeed;
+        transform.position += transform.forward * Time.fixedDeltaTime * speed;
     }
 
     private void OnTriggerEnter(Collider other)

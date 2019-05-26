@@ -15,12 +15,10 @@ public class CharacterController : MonoBehaviour
     [SerializeField, HideInInspector] private Animator _animator;
     private Vector3 _oldPos;
     private Vector3 _lookAt;
+    private Vector3 _lookAtTmp;
     private float _time;
     private bool _isDead;
     private static bool _crouch => Input.GetKey(KeyCode.LeftShift);
-    private static bool _jump => Input.GetKey(KeyCode.Space);
-    
-    private bool _autoAimInManualMode = false;
 
     private void OnValidate()
     {
@@ -35,50 +33,28 @@ public class CharacterController : MonoBehaviour
         if (_isDead)
             return;
         _time -= Time.fixedDeltaTime;
-        GameObject enemy = GameManager.Instance.GetClosestEnemy(transform.position);
-        Vector3 lookAtTmp = GameManager.Instance.LookAt.transform.position;
-        if (_time < 0)
-        {
-            if (enemy != null
-                && (enemy.transform.position - transform.position).magnitude < GameManager.Instance.AutoAttackDistance)
-            {
-                Vector3 bulletPos = transform.position;
-                bulletPos.y += 1;
-                FireballBullet bullet = Instantiate(GameManager.Instance.SelfDrivenBulletPrefab, bulletPos,
-                    Quaternion.identity).GetComponent<FireballBullet>();
-                bullet.goToObj = enemy;
-                _time = GameManager.Instance.AttackDelay;
-                lookAtTmp = enemy.transform.position;
-            }
-            else if (Input.GetMouseButton(1))
-            {
-                Vector3 bulletPos = transform.position;
-                bulletPos.y += 1;
-                FireballBullet bullet = Instantiate(GameManager.Instance.SelfDrivenBulletPrefab, bulletPos,
-                    Quaternion.identity).GetComponent<FireballBullet>();
+        ResetLookAtTmp();
+        ProcessAutoAttack();
+        ProcessManualAttack();
+        ProcessCharacterMovement();
+        ProcessCharacterRotation();
+    }
 
-                Vector3 goTo = GameManager.Instance.LookAt.transform.position;
-                goTo.y = bulletPos.y;
-                bullet.goToVect = goTo;
-                if (_autoAimInManualMode)
-                {
-                    Ray ray = new Ray(bulletPos, goTo - bulletPos);
-                    RaycastHit[] hits = Physics.SphereCastAll(ray, 3, GameManager.Instance.AttackDistance);
-                    foreach (RaycastHit hit in hits)
-                    {
-                        if (hit.transform.GetComponent<Mob>() != null)
-                        {
-                            GameObject target = hit.transform.gameObject;
-                            bullet.goToObj = target;
-                            lookAtTmp = target.transform.position;
-                            break;
-                        }
-                    }
-                }
-                _time = GameManager.Instance.AttackDelay;
-            }
-        }
+    private void ResetLookAtTmp()
+    {
+        _lookAtTmp = GameManager.Instance.LookAt.transform.position;
+    }
 
+    private void ProcessCharacterRotation()
+    {
+        Vector3 direction = _lookAt - transform.position;
+        Quaternion quaternion = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Lerp(transform.rotation, quaternion,
+            GameManager.Instance.RotationSpeed * Time.fixedDeltaTime);
+    }
+
+    private void ProcessCharacterMovement()
+    {
         int i = transform.GetSiblingIndex();
         Vector3 pos = GameManager.Instance.GetCharacterPosition(i);
         if (_oldPos != pos)
@@ -89,24 +65,48 @@ public class CharacterController : MonoBehaviour
 
         if (_agent.remainingDistance > _agent.stoppingDistance)
         {
-            _character.Move(_agent.desiredVelocity, _crouch, _jump);
+            _character.Move(_agent.desiredVelocity, _crouch, false);
         }
         else
         {
-            _character.Move(Vector3.zero, _crouch, _jump);
-            lookAtTmp.y = transform.position.y;
-            _lookAt = lookAtTmp;
+            _character.Move(Vector3.zero, _crouch, false);
+            _lookAtTmp.y = transform.position.y;
+            _lookAt = _lookAtTmp;
         }
-
-        Vector3 direction = _lookAt - transform.position;
-        Quaternion quaternion = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Lerp(transform.rotation, quaternion,
-            GameManager.Instance.RotationSpeed * Time.fixedDeltaTime);
-
-        if (Input.GetKeyDown(KeyCode.RightControl))
-            _autoAimInManualMode = !_autoAimInManualMode;
     }
 
+    private void ProcessAutoAttack()
+    {
+        GameObject enemy = GameManager.Instance.GetClosestEnemy(transform.position);
+        if (_time < 0 && enemy != null
+                      && (enemy.transform.position - transform.position).magnitude <
+                      GameManager.Instance.AutoAttackDistance)
+        {
+            Vector3 bulletPos = transform.position;
+            bulletPos.y += 1;
+            FireballBullet bullet = Instantiate(GameManager.Instance.SelfDrivenBulletPrefab, bulletPos,
+                Quaternion.identity).GetComponent<FireballBullet>();
+            bullet.goToObj = enemy;
+            _time = GameManager.Instance.AutoAttackDelay;
+            _lookAtTmp = enemy.transform.position;
+        }
+    }
+
+    private void ProcessManualAttack()
+    {
+        if (_time < 0 && Input.GetMouseButton(1))
+        {
+            Vector3 bulletPos = transform.position;
+            bulletPos.y += 1;
+            FireballBullet bullet = Instantiate(GameManager.Instance.SelfDrivenBulletPrefab, bulletPos,
+                Quaternion.identity).GetComponent<FireballBullet>();
+
+            Vector3 goTo = GameManager.Instance.LookAt.transform.position;
+            goTo.y = bulletPos.y;
+            bullet.goToVect = goTo;
+            _time = GameManager.Instance.AttackDelay;
+        }
+    }
     public void Kill()
     {
         if (_isDead)
@@ -120,7 +120,6 @@ public class CharacterController : MonoBehaviour
         _animator.SetBool("DeathTrigger", true);
         //StartCoroutine(Reborn());
     }
-
 
     public IEnumerator Reborn()
     {

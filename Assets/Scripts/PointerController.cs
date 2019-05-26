@@ -26,7 +26,15 @@ public class PointerController : MonoBehaviour
             if (!_lookLock || Input.GetMouseButton(0))
             {
                 if (_pointer != _lookAt)
+                {
                     _pointer.LookAt(_lookAt);
+                    if (GameManager.Instance.Characters.childCount > 0)
+                    {
+                        Vector3 rotation = _pointer.transform.eulerAngles;
+                        rotation.y %= 360 / GameManager.Instance.Characters.childCount;
+                        _pointer.transform.eulerAngles = rotation;
+                    }
+                }
             }
             if (Input.GetMouseButton(0))
             {

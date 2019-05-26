@@ -8,7 +8,7 @@ public class Wall : MonoBehaviour
     {
         if(other.transform.GetComponent<Mob>() == null)
             return;
-        Vector3 direction = Vector3.Reflect(other.transform.forward, other.GetContact(0).normal);
+        Vector3 direction = Quaternion.AngleAxis(Random.Range(-10f,+10f), Vector3.up)*Vector3.Reflect(other.transform.forward, other.GetContact(0).normal);
         direction.y = 0;
         other.transform.forward = direction;
     }
