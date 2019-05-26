@@ -61,6 +61,8 @@ public class GameManager : MonoBehaviour
 
     public SpawnSystem SpawnSystem => spawnSystem;
 
+    public bool GameActive => _gameActive;
+
     public int Score => _score;
 
     private void OnEnable()

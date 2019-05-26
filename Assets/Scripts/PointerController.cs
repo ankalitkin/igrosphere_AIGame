@@ -18,6 +18,8 @@ public class PointerController : MonoBehaviour
 
     private void Update()
     {
+        if(Time.timeScale < Mathf.Epsilon)
+            return;
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))

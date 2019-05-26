@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 public class Bonus : MonoBehaviour
 {
@@ -24,6 +25,9 @@ public class Bonus : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        CharacterController ch = other.GetComponent<CharacterController>();
+        if(ch == null || !ch.IsAlive)
+            return;
         Destroy(_collider);
         foreach (Transform character in GameManager.Instance.DeadCharacters)
         {

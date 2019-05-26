@@ -18,6 +18,7 @@ public class CharacterController : MonoBehaviour
     private Vector3 _lookAt;    
     private float _time;
     private bool _isDead;
+    public bool IsAlive => !_isDead;
     private static bool _crouch => Input.GetKey(KeyCode.LeftShift);
     private Material _mat => _renderer.material;
 
@@ -122,21 +123,6 @@ public class CharacterController : MonoBehaviour
         _animator.SetBool("Crouch", false);
         _animator.SetBool("DeathTrigger", true);
     }
-
-    public IEnumerator Reborn()
-    {
-        if (!_isDead)
-            yield break;
-        _animator.SetBool("DeathTrigger", false);
-        Material mat = _renderer.material;
-        DOTween.To(() => mat.GetFloat("_Metallic"), x => mat.SetFloat("_Metallic", x), 0, 0.5f);
-        yield return new WaitForSeconds(0.5f);
-        transform.parent = GameManager.Instance.Characters;
-        _isDead = false;
-        _character.enabled = true;
-        _agent.enabled = true;
-    }
-
     public IEnumerator Destroy()
     {
         DOTween.To(() => _mat.color.a, x => Utils.ChangeAlpha(_mat, x), 0, 1);
