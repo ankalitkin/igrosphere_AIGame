@@ -9,11 +9,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Camera camera;
     [SerializeField] private GameObject pointer;
     [SerializeField] private GameObject lookAt;
-    [SerializeField] private GameObject spawner;
+    [SerializeField] private SpawnSystem spawnSystem;
     [SerializeField] private GameObject selfDrivenBulletPrefab;
+    [SerializeField] private GameObject characterPrefab;
     [SerializeField] private Transform characters;
     [SerializeField] private Transform deadCharacters;
     [SerializeField] private Transform mobContainer;
+    [SerializeField] private BonusSpawner bonusSpawner;
     [SerializeField] private float rotationSpeed = 6;
     [SerializeField] private float radius = 1;
     [SerializeField] private float autoAttackDelay = .1f;
@@ -47,11 +49,17 @@ public class GameManager : MonoBehaviour
 
     public GameObject SelfDrivenBulletPrefab => selfDrivenBulletPrefab;
 
+    public GameObject CharacterPrefab => characterPrefab;
+
     public Transform Characters => characters;
 
     public Transform DeadCharacters => deadCharacters;
 
     public Transform MobContainer => mobContainer;
+
+    public BonusSpawner BonusSpawner => bonusSpawner;
+
+    public SpawnSystem SpawnSystem => spawnSystem;
 
     public int Score => _score;
 
@@ -111,7 +119,7 @@ public class GameManager : MonoBehaviour
         if (!_gameActive)
             return;
         _gameActive = false;
-        spawner.SetActive(false);
+        spawnSystem.gameObject.SetActive(false);
         DOTween.KillAll();
         StartCoroutine(_GameOver());
     }
