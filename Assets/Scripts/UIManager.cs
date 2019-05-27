@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         UpdateScore();
+        gameOverScreen.GetComponent<CanvasGroup>().alpha=0;
     }
 
     public void UpdateScore()
@@ -26,7 +28,12 @@ public class UIManager : MonoBehaviour
     public void GameOver()
     {
         gameOverScreen.SetActive(true);
-        gameOverScreen.GetComponent<Image>().DOFade(0, 1).From();
-        gameOverScreen.transform.GetChild(0).GetComponent<Text>().DOFade(0, 1).From();
+        StartCoroutine(_gameOver());
+    }
+
+    private IEnumerator _gameOver()
+    {
+        yield return new WaitForSeconds(1);
+        gameOverScreen.GetComponent<CanvasGroup>().DOFade(1, 1);
     }
 }
