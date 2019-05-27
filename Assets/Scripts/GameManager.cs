@@ -122,15 +122,16 @@ public class GameManager : MonoBehaviour
             return;
         _gameActive = false;
         spawnSystem.gameObject.SetActive(false);
+        bonusSpawner.gameObject.SetActive(false);
         DOTween.KillAll();
         StartCoroutine(_GameOver());
+        UIManager.Instance.GameOver();
     }
 
     private IEnumerator _GameOver()
     {
         yield return new WaitForSeconds(1);
         _waitForClick = true;
-        UIManager.Instance.GameOver();
         yield return new WaitForSeconds(2);
         mobContainer.gameObject.SetActive(false);
     }
