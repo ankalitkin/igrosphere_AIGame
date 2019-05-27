@@ -46,7 +46,7 @@ public class Mob : MonoBehaviour
         UpdateState();
     }
 
-    public void Hit()
+    private void Hit()
     {
         _health--;
         if (_health == 0)

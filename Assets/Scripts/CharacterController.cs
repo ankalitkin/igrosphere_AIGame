@@ -15,7 +15,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField, HideInInspector] private Renderer _renderer;
     [SerializeField, HideInInspector] private Animator _animator;
     private Vector3 _oldPos;
-    private Vector3 _lookAt;    
+    private Vector3 _lookAt;
     private float _time;
     private bool _isDead;
     public bool IsAlive => !_isDead;
@@ -23,7 +23,7 @@ public class CharacterController : MonoBehaviour
     private Material _mat => _renderer.material;
 
     private float _attackDelay =>
-        Input.GetMouseButton(1) ? GameManager.Instance.AttackDelay : GameManager.Instance.AutoAttackDelay; 
+        Input.GetMouseButton(1) ? GameManager.Instance.AttackDelay : GameManager.Instance.AutoAttackDelay;
 
     private void OnValidate()
     {
@@ -85,6 +85,7 @@ public class CharacterController : MonoBehaviour
             _lookAt = lookAt;
         }
 
+        if (transform.position == _lookAt) return;
         Vector3 direction = _lookAt - transform.position;
         Quaternion quaternion = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Lerp(transform.rotation, quaternion,
@@ -123,15 +124,16 @@ public class CharacterController : MonoBehaviour
         _animator.SetBool("Crouch", false);
         _animator.SetBool("DeathTrigger", true);
     }
+
     public IEnumerator Destroy()
     {
-        DOTween.To(() => _mat.color.a, x => Utils.ChangeAlpha(_mat, x), 0, 1);
+        _mat.DOFade(0, 1);
         yield return new WaitForSeconds(1);
         Destroy(gameObject);
     }
 
     public void FadeIn()
     {
-        DOTween.To(() => _mat.color.a, x => Utils.ChangeAlpha(_mat, x), 0, 1).From();
+        _mat.DOFade(0, 1).From();
     }
 }

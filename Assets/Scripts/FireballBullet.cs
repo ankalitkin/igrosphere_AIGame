@@ -1,4 +1,4 @@
-﻿﻿using UnityEngine;
+﻿using UnityEngine;
 
 public class FireballBullet : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class FireballBullet : MonoBehaviour
     private Vector3 _oldGoToPos;
     private float _time;
     private bool _auto;
-    
+
     private void OnValidate()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -38,7 +38,7 @@ public class FireballBullet : MonoBehaviour
     {
         if (_auto)
         {
-            if(goToObj != null)
+            if (goToObj != null)
                 _oldGoToPos = goToObj.transform.position;
             if (_time < _duration)
             {
@@ -51,7 +51,7 @@ public class FireballBullet : MonoBehaviour
         else
         {
             _time -= Time.deltaTime;
-            if(_time < 0)
+            if (_time < 0)
                 Destroy(gameObject);
         }
     }
