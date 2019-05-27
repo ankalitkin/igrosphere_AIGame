@@ -1,34 +1,33 @@
-﻿using System.Collections;
+﻿﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(PlayerHealthSystem))]
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private Camera camera;
     [SerializeField] private GameObject pointer;
     [SerializeField] private GameObject lookAt;
-    [SerializeField] private GameObject spawner;
-    [SerializeField] private GameObject floor;
+    [SerializeField] private SpawnSystem spawnSystem;
     [SerializeField] private GameObject selfDrivenBulletPrefab;
-    [SerializeField] private PointerController pointerController;
+    [SerializeField] private GameObject characterPrefab;
     [SerializeField] private Transform characters;
+    [SerializeField] private Transform deadCharacters;
+    [SerializeField] private Transform mobContainer;
+    [SerializeField] private BonusSpawner bonusSpawner;
     [SerializeField] private float rotationSpeed = 6;
     [SerializeField] private float radius = 1;
-    [SerializeField] private float mobSpeed = 2;
-    [SerializeField] private float attackDelay = .5f;
-    [SerializeField] private float bulletSpeed = 5;
-    [SerializeField] private float damage = .2f;
+    [SerializeField] private float autoAttackDelay = .1f;
+    [SerializeField] private float attackDelay = .05f;
+    [SerializeField] private float bulletSpeed = 20;
+    [SerializeField] private float autoAttackDistance = 5f;
     [SerializeField] private float attackDistance = 5f;
     public static GameManager Instance;
     private bool _gameActive = true;
+    private bool _waitForClick = false;
     private int _score;
     private List<GameObject> _enemies;
-
-
-    [SerializeField, HideInInspector] private PlayerHealthSystem _healthSystem;
-    public PlayerHealthSystem HealthSystem => _healthSystem;
 
     public GameObject Pointer => pointer;
 
@@ -37,12 +36,12 @@ public class GameManager : MonoBehaviour
     public GameObject LookAt => lookAt;
 
     public float RotationSpeed => rotationSpeed;
-
-    public float MobSpeed => mobSpeed;
-
-    public float Damage => damage;
-
+    
+    public float AutoAttackDistance => autoAttackDistance;
+    
     public float AttackDistance => attackDistance;
+
+    public float AutoAttackDelay => autoAttackDelay;
 
     public float AttackDelay => attackDelay;
 
@@ -50,7 +49,19 @@ public class GameManager : MonoBehaviour
 
     public GameObject SelfDrivenBulletPrefab => selfDrivenBulletPrefab;
 
-    public GameObject Floor => floor;
+    public GameObject CharacterPrefab => characterPrefab;
+
+    public Transform Characters => characters;
+
+    public Transform DeadCharacters => deadCharacters;
+
+    public Transform MobContainer => mobContainer;
+
+    public BonusSpawner BonusSpawner => bonusSpawner;
+
+    public SpawnSystem SpawnSystem => spawnSystem;
+
+    public bool GameActive => _gameActive;
 
     public int Score => _score;
 
@@ -58,14 +69,13 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         _enemies = new List<GameObject>();
-        _healthSystem = GetComponent<PlayerHealthSystem>();
     }
 
     public Vector3 GetCharacterPosition(int i)
     {
         if (i == 0)
             return pointer.transform.position;
-        float angle = characters.childCount > 2 ? -Mathf.PI * (i - 1) / (characters.childCount - 2) : -Mathf.PI / 2;
+        float angle = characters.childCount > 2 ? -2 * Mathf.PI * i / (characters.childCount - 1) : -Mathf.PI / 2;
         Vector3 shift = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
         shift = pointer.transform.localToWorldMatrix * shift;
         return shift * radius + pointer.transform.position;
@@ -75,7 +85,7 @@ public class GameManager : MonoBehaviour
     {
         if (_gameActive && characters.childCount == 0)
             GameOver();
-        if (!_gameActive && Input.anyKey)
+        if (_waitForClick && Input.GetMouseButton(0))
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -111,19 +121,24 @@ public class GameManager : MonoBehaviour
         if (!_gameActive)
             return;
         _gameActive = false;
+        spawnSystem.gameObject.SetActive(false);
+        bonusSpawner.gameObject.SetActive(false);
+        DOTween.KillAll();
         StartCoroutine(_GameOver());
+        UIManager.Instance.GameOver();
     }
 
     private IEnumerator _GameOver()
     {
+        yield return new WaitForSeconds(1);
+        _waitForClick = true;
         yield return new WaitForSeconds(2);
-        spawner.SetActive(false);
-        UIManager.Instance.GameOver();
+        mobContainer.gameObject.SetActive(false);
     }
 
-    public void IncrementScore()
+    public void IncreaseScore(int num)
     {
-        _score++;
+        _score += num;
         UIManager.Instance.UpdateScore();
     }
 }
