@@ -390,7 +390,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusPrefab: {fileID: 3446168876742112855, guid: d2a06c6b58988a64ca4b6bfd5318ae0f,
     type: 3}
-  delay: 5
+  delay: 3
 --- !u!4 &198732476
 Transform:
   m_ObjectHideFlags: 0
@@ -1985,7 +1985,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 1422068398}
-  sensitivity: 0.1
 --- !u!81 &1422068397
 AudioListener:
   m_ObjectHideFlags: 0
@@ -3408,7 +3407,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 252240784}
-  _canvasGroup: {fileID: 252240788}
   _buttonsSound: {fileID: 6572054970326613104}
 --- !u!82 &6572054970326613104
 AudioSource:

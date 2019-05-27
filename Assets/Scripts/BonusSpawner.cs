@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
+﻿using System.Collections;
 using UnityEngine;
 
 public class BonusSpawner : MonoBehaviour
@@ -9,6 +6,7 @@ public class BonusSpawner : MonoBehaviour
     [SerializeField] private GameObject bonusPrefab;
     [SerializeField] private float delay = 5;
     private int _bonusCount;
+
     private void Update()
     {
         if (_bonusCount == 0 && GameManager.Instance.DeadCharacters.childCount > 0)

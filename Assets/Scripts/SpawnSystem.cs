@@ -56,18 +56,19 @@ public class SpawnSystem : MonoBehaviour
         {
             float x = Random.Range(0.1f, 0.9f);
             float y = Random.Range(0.1f, 0.9f);
+
             Physics.Raycast(GameManager.Instance.Camera.ViewportPointToRay(new Vector3(x, y)), out var hit);
-            if (hit.point.y > 0)
+            if (hit.point.y > -.5f)
                 continue;
             Vector3 pos = hit.point;
             pos.y = 0;
             if ((GameManager.Instance.Pointer.transform.position - pos).magnitude < minimalSpawnDistance)
                 continue;
-            if (!Physics.CheckBox(pos, halfExtents * Vector3.one))
+            if (Physics.CheckBox(pos, new Vector3(halfExtents, .5f, halfExtents)))
                 continue;
             return pos;
         }
 
-        return Vector3.positiveInfinity;
+        return Vector3.zero;
     }
 }

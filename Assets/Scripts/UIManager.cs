@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         UpdateScore();
-        gameOverScreen.GetComponent<CanvasGroup>().alpha=0;
+        gameOverScreen.GetComponent<CanvasGroup>().alpha = 0;
     }
 
     public void UpdateScore()

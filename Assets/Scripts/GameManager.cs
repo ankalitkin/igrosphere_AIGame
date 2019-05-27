@@ -1,4 +1,4 @@
-﻿﻿using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -36,9 +36,9 @@ public class GameManager : MonoBehaviour
     public GameObject LookAt => lookAt;
 
     public float RotationSpeed => rotationSpeed;
-    
+
     public float AutoAttackDistance => autoAttackDistance;
-    
+
     public float AttackDistance => attackDistance;
 
     public float AutoAttackDelay => autoAttackDelay;
@@ -115,8 +115,8 @@ public class GameManager : MonoBehaviour
 
         return closest;
     }
-    
-    public void GameOver()
+
+    private void GameOver()
     {
         if (!_gameActive)
             return;

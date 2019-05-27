@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class WallGenerator : MonoBehaviour
 {
@@ -25,10 +23,16 @@ public class WallGenerator : MonoBehaviour
         float w2 = p4.x - p3.x + 1;
         float w3 = p3.z - p1.z + 1;
         float w4 = p4.z - p2.z + 1;
-        Instantiate(wallPrefab, c1, Quaternion.LookRotation(c1-p1), transform).transform.localScale = new Vector3( 1, 1, w1);
-        Instantiate(wallPrefab, c2, Quaternion.LookRotation(c2-p4), transform).transform.localScale = new Vector3( 1, 1, w2);
-        Instantiate(wallPrefab, c3, Quaternion.LookRotation(c3-p3), transform).transform.localScale = new Vector3( 1, 1, w3);
-        Instantiate(wallPrefab, c4, Quaternion.LookRotation(c4-p2), transform).transform.localScale = new Vector3( 1, 1, w4);
+        AddWall(c1, p1, w1);
+        AddWall(c2, p4, w2);
+        AddWall(c3, p3, w3);
+        AddWall(c4, p2, w4);
+    }
+
+    private void AddWall(Vector3 center, Vector3 corner, float length)
+    {
+        Instantiate(wallPrefab, center, Quaternion.LookRotation(center - corner), transform).transform.localScale =
+            new Vector3(1, 1, length);
     }
 
     private Vector3 GetPos(float x, float y)
