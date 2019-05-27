@@ -1,10 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Animations;
 using UnityStandardAssets.Characters.ThirdPerson;
 
 public class CharacterController : MonoBehaviour

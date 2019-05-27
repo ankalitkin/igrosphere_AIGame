@@ -1,7 +1,5 @@
 ﻿using System;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Analytics;
 using Random = UnityEngine.Random;
 
 public class SpawnSystem : MonoBehaviour
